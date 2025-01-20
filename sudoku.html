@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sudoku - Play a Game</title>
+    <!-- reference your stylesheet here -->
+    <link rel="stylesheet" href="./styles/sudoku.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- reference your source code here -->
+    <script type="module" src="./scripts/sudoku.js"></script>
+  </head>
+  <body>
+    <header>
+      <div id="header-logo">
+        <img id="logo-img" src="./images/logo.gif" alt="Sudoku Logo" />
+        <div id="logo-text">Sudoku Center</div>
+      </div>
+      <nav>
+        <a class="nav-link" href="./sudoku.html">Play Game</a>
+        <a class="nav-link" href="./high_scores.html">High Scores</a>
+      </nav>
+    </header>
+
+    <main>
+      <table class="sudoku-board"></table>
+      <table class="input-row">
+        <tbody>
+          <tr>
+            <td>
+              <button class="button-1">1</button>
+            </td>
+            <td>
+              <button class="button-2">2</button>
+            </td>
+            <td>
+              <button class="button-3">3</button>
+            </td>
+            <td>
+              <button class="button-4">4</button>
+            </td>
+            <td>
+              <button class="button-5">5</button>
+            </td>
+            <td>
+              <button class="button-6">6</button>
+            </td>
+            <td>
+              <button class="button-7">7</button>
+            </td>
+            <td>
+              <button class="button-8">8</button>
+            </td>
+            <td>
+              <button class="button-9">9</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button class="button-new">new game</button>
+            </td>
+            <td>
+              <button class="button-validate">validate</button>
+            </td>
+            <td>
+              <button></button>
+            </td>
+            <td>
+              <button></button>
+            </td>
+            <td>
+              <button></button>
+            </td>
+            <td>
+              <button></button>
+            </td>
+            <td>
+              <button></button>
+            </td>
+            <td>
+              <button class="button-clear">clear</button>
+            </td>
+            <td>
+              <button class="button-back">back</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

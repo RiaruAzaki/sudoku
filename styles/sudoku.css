@@ -1,0 +1,204 @@
+/* add your styling and layout CSS here */
+body {
+  margin: 0;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  padding: 1.5em;
+  background: #363636;
+}
+
+nav, #header-logo {
+  align-items: center;
+  display: flex;
+  gap: 1.5em;
+}
+
+nav {
+  margin-left: auto;
+}
+
+#logo-img {
+  height: 32px;
+}
+
+.nav-link, #logo-text {
+  color: white;
+  text-decoration: none;
+  font-family: arial;
+}
+
+/* Sudoku Board */
+main {  
+  max-width: min(100%, calc( 80vh - 130px));
+
+  padding: 20px;  
+  margin: auto;
+}
+
+.sudoku-board {
+  width: 100%;
+  aspect-ratio: 1;
+
+  border-collapse: collapse;
+  border: 3px solid black;
+}
+
+.sudoku-cell:nth-child(3n) {
+  border-right: 3px solid black;
+}
+
+.sudoku-row:nth-child(3n) {
+  border-bottom: 3px solid black;
+}
+
+.sudoku-cell {
+  position: relative;
+  width: calc(100% / 9);
+  height: calc(100% / 9);
+
+  border: 1px solid black;
+
+  &:hover{
+    background: #f5dd90;
+  }
+  
+  &:focus-within {
+    background: #f2f2f2;
+  }
+}
+
+.sudoku-cell-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  padding-left: 5%;
+  padding-right: 5%;
+}
+.sudoku-cell-content > div {
+  width: 33%;
+}
+
+.mark-1 {
+  order: 1;
+}
+
+.mark-2 {
+  order: 2;
+}
+
+.mark-3 {
+  order: 3;
+}
+
+.mark-4 {
+  order: 4;
+}
+
+.mark-5 {
+  order: 5;
+}
+
+.mark-6 {
+  order: 6;
+}
+
+.mark-7 {
+  order: 7;
+}
+
+.mark-8 {
+  order: 8;
+}
+
+.mark-9 {
+  order: 9;
+}
+
+.sudoku-cell > input {  
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+
+  caret-color: transparent; 
+  background: transparent;
+  border: none;
+  resize: none;
+  padding: 0;
+  margin: 0;
+
+  &:focus {
+    outline: 2px solid black;
+    z-index: 1;
+    animation: blink 1s steps(2, start) infinite;
+  }
+}
+
+@keyframes blink {
+  to {
+    outline: 2px solid transparent;
+  }
+}
+
+.sudoku-cell-content { 
+  font-family: "Crimson Text", serif;
+  font-size: min(4vw, 4vh);
+  text-align: center;
+  line-height: 0.75em;
+}
+
+.highlight {
+  background: #f5dd90;
+}
+
+.error {
+  background: #f76c5e;
+}
+
+/* Input Row */
+.input-row {
+  margin-top: 10px;
+  width: 100%;
+
+  border-collapse: collapse;
+  border: 3px solid black;
+}
+
+.input-row td {
+  aspect-ratio: 1;
+  width: calc(100% / 9);
+  height: calc(100% / 2);
+  padding: 0;
+
+
+  overflow: clip;
+
+  border: 1px solid black;
+
+  &:hover{
+    background: #f5dd90;
+  }
+  
+  &:active {
+    background: #f2f2f2;
+  }
+}
+
+.input-row button {
+  aspect-ratio: 1;
+  width: 100%;
+  height: 100%;
+  padding: 0 ;
+  margin: 0;
+
+  background: transparent;
+  border: none;
+}
