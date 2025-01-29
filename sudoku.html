@@ -26,59 +26,77 @@
         <a class="nav-link" href="./high_scores.html">High Scores</a>
       </nav>
     </header>
-    <div class="settings">
-      <div class="settings-row" style="grid-row: span 2">
-        Welcome to Sudoku Center use the use the number keys to mark and the
-        arrows keys to navigate
-      </div>
-      <div class="settings-row">
-        <div>Time:</div>
-        <div>10</div>
-      </div>
-      <div class="settings-row">
-        <div>Allow Multiple Marks:</div>
-        <div><input checked type="checkbox" name="" id="" /></div>
-      </div>
-      <div class="settings-row">
-        <div>Auto Mark:</div>
-        <div><input checked type="checkbox" name="" id="" /></div>
-      </div>
-      <div class="settings-row">
-        <div>Auto Validate:</div>
-        <div><input checked type="checkbox" name="" id="" /></div>
-      </div>
+    <main>
+      <div class="settings">
+        <div class="settings-row" style="grid-row: span 2">
+          Welcome to Sudoku Center use the use the number keys to mark and the
+          arrows keys to navigate
+        </div>
+        <div class="settings-row">
+          <div>Time:</div>
+          <div id="timer"></div>
+        </div>
+        <div class="settings-row">
+          <div>Allow Multiple Marks:</div>
+          <div>
+            <input
+              checked
+              class="setting-allow-multiple-marks"
+              type="checkbox"
+            />
+          </div>
+        </div>
+        <div class="settings-row">
+          <div>Auto Mark:</div>
+          <div>
+            <input class="setting-auto-mark" type="checkbox" />
+          </div>
+        </div>
+        <div class="settings-row">
+          <div>Auto Validate:</div>
+          <div>
+            <input checked class="setting-auto-validate" type="checkbox" />
+          </div>
+        </div>
 
-      <div class="settings-row">
-        <div>Highlight Related Cells:</div>
-        <div><input checked type="checkbox" name="" id="" /></div>
+        <div class="settings-row">
+          <div>Highlight Related Cells:</div>
+          <div>
+            <input
+              checked
+              class="setting-highlight-related-cells"
+              type="checkbox"
+            />
+          </div>
+        </div>
+        <div class="settings-row"></div>
       </div>
-      <div class="settings-row"></div>
-    </div>
-    <div class="sudoku-board"></div>
-    <div class="onscreen-input">
-      <div class="input-row">
-        <button class="button-1">1</button>
-        <button class="button-2">2</button>
-        <button class="button-3">3</button>
-        <button class="button-4">4</button>
-        <button class="button-5">5</button>
-        <button class="button-6">6</button>
-        <button class="button-7">7</button>
-        <button class="button-8">8</button>
-        <button class="button-9">9</button>
-      </div>
+      <div class="sudoku-board"></div>
+      <div class="onscreen-input">
+        <div class="input-row">
+          <button class="button-1">1</button>
+          <button class="button-2">2</button>
+          <button class="button-3">3</button>
+          <button class="button-4">4</button>
+          <button class="button-5">5</button>
+          <button class="button-6">6</button>
+          <button class="button-7">7</button>
+          <button class="button-8">8</button>
+          <button class="button-9">9</button>
+        </div>
 
-      <div class="input-row">
-        <button class="button-new">new game</button>
-        <button class="button-validate">validate</button>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button></button>
-        <button class="button-clear">clear</button>
-        <button class="button-back">back</button>
+        <div class="input-row">
+          <button class="button-new">new game</button>
+          <button class="button-validate">validate</button>
+          <button></button>
+          <button></button>
+          <button></button>
+          <button></button>
+          <button></button>
+          <button class="button-clear">clear</button>
+          <button class="button-back">back</button>
+        </div>
       </div>
-    </div>
+    </main>
   </body>
 </html>
