@@ -3,6 +3,7 @@ let cells = [];
 let cellInputs = [];
 let selectedCell = null;
 let time = 0;
+let state = "playing";
 let undoStack = [];
 
 let autoMark = false;
@@ -86,12 +87,12 @@ function initOnscreenKeyborad() {
   button_new.addEventListener("click", () => resetGame());
   button_validate.addEventListener("click", () => manualValidate());
   button_clear.addEventListener("click", () => {
-    undoStack.push(recordGame());
+    recordGame();
 
     clearMarks();
   });
   button_back.addEventListener("click", () => {
-    undoStack.push(recordGame());
+    recordGame();
     removeLastMark();
   });
   button_force_win.addEventListener("click", () => win());
@@ -155,11 +156,11 @@ function initSettings() {
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "Backspace":
-      undoStack.push(recordGame());
+      recordGame();
       removeLastMark();
       break;
     case "Delete":
-      undoStack.push(recordGame());
+      recordGame();
       clearMarks();
       break;
     case "ArrowUp":
@@ -216,7 +217,7 @@ function onscreenMark(number) {
   if (autoMark) {
     activeMark = parseInt(number);
   } else {
-    undoStack.push(recordGame());
+    recordGame();
     addMark(parseInt(number));
   }
 }
@@ -255,6 +256,7 @@ function addMark(value) {
 // Removes the last created mark
 function removeLastMark() {
   if (selectedCell.querySelector("input").readOnly) return;
+  if (!allowInput) return;
 
   let marks = selectedCell.querySelectorAll("div");
   if (marks.length > 0) {
@@ -268,6 +270,7 @@ function removeLastMark() {
 // Removes all marks from the selected cell
 function clearMarks() {
   if (selectedCell.querySelector("input").readOnly) return;
+  if (!allowInput) return;
 
   let marks = selectedCell.querySelectorAll(".mark");
   for (let mark of marks) {
@@ -281,7 +284,7 @@ function clearMarks() {
 // Adds the mark the user entered into the cell input field if it is valid and clears the field
 function handleInput(input) {
   if (input.value.match(/[1-9]/)) {
-    undoStack.push(recordGame());
+    recordGame();
     addMark(input.value);
   }
 
@@ -302,7 +305,7 @@ function handleFocus(input) {
 
   // Automatically add the mark if enabled
   if (autoMark && !input.readOnly) {
-    undoStack.push(recordGame());
+    recordGame();
     addMark(activeMark);
     document.activeElement.blur(); // Remove focus from input
   }
@@ -442,9 +445,9 @@ function validateBox(boxX, boxY, board) {
 }
 
 function manualValidate() {
-  if (allowInput == false) {
+  if (state == "validate") {
     document.querySelector("#onscreen-validate").innerHTML = "validate";
-
+    state = "playing";
     allowInput = true;
 
     document.querySelectorAll(".error").forEach((cell) => {
@@ -452,18 +455,19 @@ function manualValidate() {
     });
 
     return;
+  } else if (state == "playing") {
+    state = "validate";
+    allowInput = false;
+    let valid = validateBoard();
+
+    if (!valid) {
+      board.classList.add("error");
+    } else {
+      win();
+    }
+
+    document.querySelector("#onscreen-validate").innerHTML = "continue";
   }
-
-  allowInput = false;
-  let valid = validateBoard();
-
-  if (!valid) {
-    board.classList.add("error");
-  } else {
-    win();
-  }
-
-  document.querySelector("#onscreen-validate").innerHTML = "continue";
 }
 
 // Reset the game to its initial state
@@ -485,9 +489,14 @@ function resetGame() {
     cell.classList.remove("win");
   }
 
+  state = "playing";
+  allowInput = true;
+
+  clearBoard();
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
       if (game[y][x] !== 0) {
+        console.log(game[y][x]);
         setCell(x, y, game[y][x], true);
       }
     }
@@ -497,7 +506,7 @@ function resetGame() {
   selectedCell = cells[0];
 
   undoStack = [];
-  undoStack.push(recordGame());
+  recordGame();
 }
 
 function recordGame() {
@@ -518,13 +527,15 @@ function recordGame() {
     game.push(row);
   }
 
+  undoStack.push(game);
+
   return game;
 }
 
 function undo() {
   console.log(undoStack);
 
-  if (undoStack.length < 1) return;
+  if (undoStack.length < 1 || !allowInput) return;
 
   let game = undoStack.pop();
 
@@ -539,6 +550,8 @@ function undo() {
 }
 
 function setCell(x, y, value, disable) {
+  console.log(x, y, value, disable);
+
   selectedCell = cells[y * 9 + x];
   addMark(value);
   cellInputs[y * 9 + x].readOnly = disable;
@@ -563,6 +576,7 @@ function clearBoard() {
 }
 
 function win() {
+  state = "win";
   allowInput = false;
 
   for (let cell of cells) {
