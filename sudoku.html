@@ -5,97 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sudoku - Play a Game</title>
     <!-- reference your stylesheet here -->
-    <link rel="stylesheet" href="./styles/sudoku.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="./styles/sudoku.css" />
     <!-- reference your source code here -->
     <script type="module" src="./scripts/sudoku.js"></script>
   </head>
   <body>
-    <header>
-      <div id="header-logo">
-        <img id="logo-img" src="./images/logo.gif" alt="Sudoku Logo" />
-        <div id="logo-text">Sudoku Center</div>
+    <nav
+      class="navbar has-background-grey-darker"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div class="navbar-brand">
+        <a class="has-text-white navbar-item" href="#">
+          <img src="./images/logo.gif" alt="Logo" />
+          <p class="ml-4">Sudoku Center</p>
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger has-text-white"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navMenu"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
       </div>
-      <nav>
-        <a class="nav-link" href="./sudoku.html">Play Game</a>
-        <a class="nav-link" href="./high_scores.html">High Scores</a>
-      </nav>
-    </header>
-    <main>
-      <div class="settings">
-        <div class="settings-row" style="grid-row: span 2">
+
+      <div id="navMenu" class="navbar-menu has-background-grey-darker">
+        <div class="navbar-end">
+          <a href="./sudoku.html" class="navbar-item has-text-white">Sudoku</a>
+          <a href="./high_scores.html" class="navbar-item has-text-white"
+            >High Scores</a
+          >
+        </div>
+      </div>
+    </nav>
+    <nav>Sudoku Center V</nav>
+    <main id="sudoku">
+      <div id="settings">
+        <div class="settings-cell" style="grid-row: span 2">
           Welcome to Sudoku Center use the use the number keys to mark and the
           arrows keys to navigate
         </div>
-        <div class="settings-row">
+        <div class="settings-cell">
           <div>Time:</div>
-          <div id="timer"></div>
+          <div id="sudoku-timer"></div>
         </div>
-        <div class="settings-row">
+        <div class="settings-cell"></div>
+        <div class="settings-cell">
           <div>Allow Multiple Marks:</div>
           <div>
-            <input
-              checked
-              class="setting-allow-multiple-marks"
-              type="checkbox"
-            />
+            <input checked id="setting-allow-multiple-marks" type="checkbox" />
           </div>
         </div>
-        <div class="settings-row">
+        <div class="settings-cell">
           <div>Auto Mark:</div>
           <div>
-            <input class="setting-auto-mark" type="checkbox" />
+            <input id="setting-auto-mark" type="checkbox" />
           </div>
         </div>
-        <div class="settings-row">
+        <div class="settings-cell">
           <div>Auto Validate:</div>
           <div>
-            <input checked class="setting-auto-validate" type="checkbox" />
+            <input checked id="setting-auto-validate" type="checkbox" />
           </div>
         </div>
-
-        <div class="settings-row">
+        <div class="settings-cell">
           <div>Highlight Related Cells:</div>
           <div>
             <input
               checked
-              class="setting-highlight-related-cells"
+              id="setting-highlight-related-cells"
               type="checkbox"
             />
           </div>
         </div>
-        <div class="settings-row"></div>
+        <div class="settings-cell">
+          <div>Skip Disabled Cells:</div>
+          <div>
+            <input id="setting-skip-disabled-cells" type="checkbox" />
+          </div>
+        </div>
       </div>
-      <div class="sudoku-board"></div>
-      <div class="onscreen-input">
-        <div class="input-row">
-          <button class="button-1">1</button>
-          <button class="button-2">2</button>
-          <button class="button-3">3</button>
-          <button class="button-4">4</button>
-          <button class="button-5">5</button>
-          <button class="button-6">6</button>
-          <button class="button-7">7</button>
-          <button class="button-8">8</button>
-          <button class="button-9">9</button>
-        </div>
-
-        <div class="input-row">
-          <button class="button-new">new game</button>
-          <button class="button-validate">validate</button>
-          <button></button>
-          <button></button>
-          <button></button>
-          <button></button>
-          <button></button>
-          <button class="button-clear">clear</button>
-          <button class="button-back">back</button>
-        </div>
+      <div id="sudoku-board"></div>
+      <div id="onscreen-keyboard">
+        <button id="onscreen-1" class="onscreen-input">1</button>
+        <button id="onscreen-2" class="onscreen-input">2</button>
+        <button id="onscreen-3" class="onscreen-input">3</button>
+        <button id="onscreen-4" class="onscreen-input">4</button>
+        <button id="onscreen-5" class="onscreen-input">5</button>
+        <button id="onscreen-6" class="onscreen-input">6</button>
+        <button id="onscreen-7" class="onscreen-input">7</button>
+        <button id="onscreen-8" class="onscreen-input">8</button>
+        <button id="onscreen-9" class="onscreen-input">9</button>
+        <button id="onscreen-new" class="onscreen-input">new game</button>
+        <button id="onscreen-validate" class="onscreen-input">validate</button>
+        <button id="onscreen-force-win" class="onscreen-input">
+          force win (testing)
+        </button>
+        <button class="onscreen-input"></button>
+        <button class="onscreen-input"></button>
+        <button class="onscreen-input"></button>
+        <button class="onscreen-input"></button>
+        <button id="onscreen-clear" class="onscreen-input">clear</button>
+        <button id="onscreen-back" class="onscreen-input">
+          <img src="./images/undo.png" alt="undo-icon" />
+        </button>
       </div>
     </main>
   </body>
