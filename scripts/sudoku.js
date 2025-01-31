@@ -3,6 +3,7 @@ let cells = [];
 let cellInputs = [];
 let selectedCell = null;
 let time = 0;
+let undoStack = [];
 
 let autoMark = false;
 let activeMark = 1;
@@ -80,12 +81,21 @@ function initOnscreenKeyborad() {
   let button_clear = document.getElementById("onscreen-clear");
   let button_back = document.getElementById("onscreen-back");
   let button_force_win = document.getElementById("onscreen-force-win");
+  let button_onscreen_undo = document.getElementById("onscreen-undo");
 
   button_new.addEventListener("click", () => resetGame());
   button_validate.addEventListener("click", () => manualValidate());
-  button_clear.addEventListener("click", () => clearMarks());
-  button_back.addEventListener("click", () => removeLastMark());
+  button_clear.addEventListener("click", () => {
+    undoStack.push(recordGame());
+
+    clearMarks();
+  });
+  button_back.addEventListener("click", () => {
+    undoStack.push(recordGame());
+    removeLastMark();
+  });
   button_force_win.addEventListener("click", () => win());
+  button_onscreen_undo.addEventListener("click", () => undo());
 }
 
 // Initialize Settings
@@ -108,7 +118,6 @@ function initSettings() {
     autoMark = settingAutoMark.checked;
   });
 
-  console.log("autoMark");
   let settingAutoValidate = document.getElementById("setting-auto-validate");
   settingAutoValidate.checked = autoValidate;
   settingAutoValidate.addEventListener("change", () => {
@@ -146,9 +155,11 @@ function initSettings() {
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "Backspace":
+      undoStack.push(recordGame());
       removeLastMark();
       break;
     case "Delete":
+      undoStack.push(recordGame());
       clearMarks();
       break;
     case "ArrowUp":
@@ -205,13 +216,14 @@ function onscreenMark(number) {
   if (autoMark) {
     activeMark = parseInt(number);
   } else {
+    undoStack.push(recordGame());
     addMark(parseInt(number));
   }
 }
 
 // Adds toggles a mark on or off depending on the current state
 function addMark(value) {
-  if (!allowInput) return;
+  if (!allowInput || selectedCell.querySelector("input").readOnly) return;
 
   // Create mark
   let mark = document.createElement("div");
@@ -242,7 +254,7 @@ function addMark(value) {
 
 // Removes the last created mark
 function removeLastMark() {
-  if (selectedCell.querySelector("input").readOnly === true) return;
+  if (selectedCell.querySelector("input").readOnly) return;
 
   let marks = selectedCell.querySelectorAll("div");
   if (marks.length > 0) {
@@ -255,7 +267,7 @@ function removeLastMark() {
 
 // Removes all marks from the selected cell
 function clearMarks() {
-  if (selectedCell.querySelector("input").readOnly === true) return;
+  if (selectedCell.querySelector("input").readOnly) return;
 
   let marks = selectedCell.querySelectorAll(".mark");
   for (let mark of marks) {
@@ -269,6 +281,7 @@ function clearMarks() {
 // Adds the mark the user entered into the cell input field if it is valid and clears the field
 function handleInput(input) {
   if (input.value.match(/[1-9]/)) {
+    undoStack.push(recordGame());
     addMark(input.value);
   }
 
@@ -282,10 +295,14 @@ function handleFocus(input) {
   let x = parseInt(input.getAttribute("data-x"));
   let y = parseInt(input.getAttribute("data-y"));
   selectedCell = cells[y * 9 + x];
-  highlightRelatedCells(input);
+
+  if (highlightRelated) {
+    highlightRelatedCells(input);
+  }
 
   // Automatically add the mark if enabled
-  if (autoMark) {
+  if (autoMark && !input.readOnly) {
+    undoStack.push(recordGame());
     addMark(activeMark);
     document.activeElement.blur(); // Remove focus from input
   }
@@ -340,21 +357,21 @@ function validateBoard() {
     .querySelectorAll(".error")
     .forEach((cell) => cell.classList.remove("error"));
 
-  let board = [];
+  let arrayBoard = [];
   for (let y = 0; y < 9; y++) {
     let row = [];
     for (let x = 0; x < 9; x++) {
       let marks = cells[y * 9 + x].querySelectorAll("div");
       row.push(marks.length !== 1 ? -1 : parseInt(marks[0].textContent));
     }
-    board.push(row);
+    arrayBoard.push(row);
   }
 
   // Validate rows
   for (let y = 0; y < 9; y++) {
     let seen = new Map();
     for (let x = 0; x < 9; x++) {
-      let num = board[y][x];
+      let num = arrayBoard[y][x];
       if (num !== -1) {
         if (seen.has(num)) {
           seen.get(num).forEach((cell) => cell.classList.add("error"));
@@ -375,7 +392,7 @@ function validateBoard() {
   for (let x = 0; x < 9; x++) {
     let seen = new Map();
     for (let y = 0; y < 9; y++) {
-      let num = board[y][x];
+      let num = arrayBoard[y][x];
       if (num !== -1) {
         if (seen.has(num)) {
           seen.get(num).forEach((cell) => cell.classList.add("error"));
@@ -395,7 +412,7 @@ function validateBoard() {
   // Validate 3x3 boxes
   for (let boxY = 0; boxY < 9; boxY += 3) {
     for (let boxX = 0; boxX < 9; boxX += 3) {
-      validateBox(boxX, boxY, board);
+      validateBox(boxX, boxY, arrayBoard);
     }
   }
 }
@@ -462,7 +479,6 @@ function resetGame() {
     [0, 3, 0, 0, 0, 0, 0, 8, 0],
     [0, 0, 6, 0, 0, 0, 0, 0, 0],
   ];
-  clearBoard();
 
   let winCells = document.querySelectorAll(".win");
   for (let cell of winCells) {
@@ -472,19 +488,60 @@ function resetGame() {
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
       if (game[y][x] !== 0) {
-        setCell(x, y, game[y][x]);
+        setCell(x, y, game[y][x], true);
       }
     }
   }
   time = 0;
 
   selectedCell = cells[0];
+
+  undoStack = [];
+  undoStack.push(recordGame());
 }
 
-function setCell(x, y, value) {
+function recordGame() {
+  let game = [];
+  for (let y = 0; y < 9; y++) {
+    let row = [];
+    for (let x = 0; x < 9; x++) {
+      let cell = { marks: [], disable: false };
+
+      let marks = cells[y * 9 + x].querySelectorAll("div");
+      let input = cellInputs[y * 9 + x];
+      cell.disable = input.readOnly;
+      for (let mark of marks) {
+        cell.marks.push(parseInt(mark.textContent));
+      }
+      row.push(cell);
+    }
+    game.push(row);
+  }
+
+  return game;
+}
+
+function undo() {
+  console.log(undoStack);
+
+  if (undoStack.length < 1) return;
+
+  let game = undoStack.pop();
+
+  clearBoard();
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      for (let mark of game[y][x].marks) {
+        setCell(x, y, mark, game[y][x].disable);
+      }
+    }
+  }
+}
+
+function setCell(x, y, value, disable) {
   selectedCell = cells[y * 9 + x];
   addMark(value);
-  cellInputs[y * 9 + x].readOnly = true;
+  cellInputs[y * 9 + x].readOnly = disable;
 }
 
 // Removes all marks from the board
@@ -494,6 +551,10 @@ function clearBoard() {
     for (let mark of marks) {
       mark.remove();
     }
+  }
+
+  for (let input of cellInputs) {
+    input.readOnly = false;
   }
 
   if (allowInput == false) {

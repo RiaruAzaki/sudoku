@@ -38,7 +38,7 @@ main#sudoku {
 
   margin: auto;
 
-  min-width: 450px;
+  min-width: 360px;
   max-width: calc(100vh * (12 / 11) - var(--gap) - var(--header-height));
 
   padding: var(--gap);
