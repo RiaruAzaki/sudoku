@@ -25,9 +25,30 @@
   background: var(--background);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #ffffff;
+    --background: #181818;
+    --outline: #363636;
+    --highlight: #5985b9;
+    --disabled: #252525;
+    --error: #d1453b;
+    --disabled-highlight: hsl(
+      213,
+      37.3%,
+      42.5%
+    ); 
+    --error-highlight: hsl(6, 59.1%, 64.1%); 
+    --disabled-error: hsl(5, 36.9%, 28.4%); 
+    --disabled-error-highlight: hsl(5, 36.9%, 48.4%);red */
+    --win: #2d5f2d; 
+  }
+}
+
 button,
 select,
 input {
+  color: var(--text);
   font-family: var(--interface-font) !important;
   font-size: inherit;
 }
@@ -118,6 +139,8 @@ body#sudoku {
   background: var(--outline);
   gap: var(--outline-width);
   padding: var(--outline-width-bold);
+
+  color: var(--text);
 }
 
 .onscreen-input {
