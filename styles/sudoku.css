@@ -11,11 +11,12 @@
   --text: black;
   --background: white;
   --outline: black;
+  --focus: black;
   --highlight: #f2e3b6;
   --disabled: #dddddd;
   --error: #f76c5e;
   --disabled-highlight: #e8dac4;
-  --error-highlight: rgb(244, 141, 115);
+  --error-highlight: #f48d73;
   --disabled-error: #ec8a83;
   --disabled-error-highlight: #f2a47d;
   --win: #a3e2a3;
@@ -25,11 +26,13 @@
   background: var(--background);
 }
 
+
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #ffffff;
     --background: #181818;
     --outline: #363636;
+    --focus: white;
     --highlight: #5985b9;
     --disabled: #252525;
     --error: #d1453b;
@@ -87,6 +90,7 @@ body#sudoku {
 
   display: grid;
   grid-template-rows: repeat(9, 1fr);
+  box-sizing: border-box;
 
   aspect-ratio: 3 / 9;
 
@@ -104,6 +108,40 @@ body#sudoku {
 
   overflow: hidden;
   background: var(--background);
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--disabled);
+  
+  display: grid;
+  place-content: center;
+  
+  font: inherit;
+  color: currentColor;
+  width: 1em;
+  height: 1em;
+  border: var(--outline-width) solid var(--outline);
+  margin: 0;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  text-align: center;
+  
+  width: 1em;
+  height: 1em;
+  
+  color: var(--background);
+
+  background: var(--disabled) ;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "✔";
+  padding-bottom: 0.125em;
+  background: var(--text);
 }
 
 @media (max-width: 768px) {
@@ -201,7 +239,7 @@ body#sudoku {
 
   &:focus-within {
     z-index: 1;
-    outline: 3px solid var(--outline);
+    outline: 3px solid var(--focus);
     animation: blink 1s steps(2, start) infinite;
   }
 

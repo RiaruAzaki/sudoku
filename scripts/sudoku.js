@@ -386,7 +386,6 @@ function checkBoard() {
     arrayBoard.push(row);
   }
 
-  console.log(arrayBoard);
 
   // Validate rows
   for (let y = 0; y < 9; y++) {

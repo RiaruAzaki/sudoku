@@ -2,11 +2,11 @@
 A minimalist collection of classic games focused on pure gameplay without ads or unnecessary features.
 
 ## Try it out
-TODO: add link
+[Sudoku](https://riaruazaki.github.io/simple-games-collection/sudoku)
 
 ## Included Game Demos
-- Sudoku
-TODO: add demo
+- [Sudoku](https://riaruazaki.github.io/simple-games-collection/sudoku)
+
 
 - more to come
 
