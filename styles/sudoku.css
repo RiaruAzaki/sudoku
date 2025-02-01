@@ -27,7 +27,7 @@
 }
 
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --text: #ffffff;
     --background: #181818;
@@ -42,7 +42,7 @@
     --disabled-error-highlight: #a9554e;red */
     --win: #2d5f2d; 
   }
-}
+} */
 
 button,
 select,

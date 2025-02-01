@@ -386,6 +386,17 @@ function checkBoard() {
     arrayBoard.push(row);
   }
 
+  console.log(arrayBoard);
+  let correct = true;
+
+  // Check for empy cells
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      if (arrayBoard[y][x] === -1) {
+        correct = false;
+      }
+    }
+  }
 
   // Validate rows
   for (let y = 0; y < 9; y++) {
@@ -399,6 +410,7 @@ function checkBoard() {
           document
             .querySelector(`[data-x="${x}"][data-y="${y}"]`)
             .parentElement.classList.add("error");
+          correct = false;
         } else {
           seen.set(num, [
             document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
@@ -420,6 +432,7 @@ function checkBoard() {
           document
             .querySelector(`[data-x="${x}"][data-y="${y}"]`)
             .parentElement.classList.add("error");
+          correct = false;
         } else {
           seen.set(num, [
             document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
@@ -433,12 +446,15 @@ function checkBoard() {
   // Validate 3x3 boxes
   for (let boxY = 0; boxY < 9; boxY += 3) {
     for (let boxX = 0; boxX < 9; boxX += 3) {
-      checkBox(boxX, boxY, arrayBoard);
+      correct = checkBox(boxX, boxY, arrayBoard) && correct;
     }
   }
+
+  return correct;
 }
 
 function checkBox(boxX, boxY, board) {
+  let correct = true;
   let seen = new Map();
   for (let y = 0; y < 3; y++) {
     for (let x = 0; x < 3; x++) {
@@ -451,6 +467,7 @@ function checkBox(boxX, boxY, board) {
           document
             .querySelector(`[data-x="${cellX}"][data-y="${cellY}"]`)
             .parentElement.classList.add("error");
+          correct = false;
         } else {
           seen.set(num, [
             document.querySelector(`[data-x="${cellX}"][data-y="${cellY}"]`)
@@ -460,6 +477,7 @@ function checkBox(boxX, boxY, board) {
       }
     }
   }
+  return correct;
 }
 
 function manualCheck() {
@@ -476,6 +494,8 @@ function manualCheck() {
     document.querySelector("#onscreen-check").innerHTML = "continue";
 
     let correct = checkBoard();
+
+    console.log(correct);
 
     if (!correct) {
       board.classList.add("error");
@@ -509,7 +529,7 @@ function initSettings() {
     autoMark = settingAutoMark.checked;
   });
 
-  let settingAutoValidate = document.getElementById("setting-auto-validate");
+  let settingAutoValidate = document.getElementById("setting-highlight-errors");
   settingAutoValidate.checked = autoValidate;
   settingAutoValidate.addEventListener("change", () => {
     autoValidate = settingAutoValidate.checked;
@@ -545,6 +565,9 @@ function initSettings() {
 function win() {
   state = "win";
   allowInput = false;
+  win;
+
+  document.getElementById("onscreen-check").innerHTML = "Win!";
 
   for (let cell of cells) {
     cell.classList.add("win");
@@ -555,105 +578,112 @@ function win() {
 function resetGame() {
   let game = [
     [
-      { marks: [], disable: false },
-      { marks: [1], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [9], disable: true },
-      { marks: [], disable: false },
-    ],
-    [
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [4], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
+      { marks: [8], disable: false },
       { marks: [2], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-    ],
-    [
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [8], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [5], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-    ],
-    [
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [3], disable: true },
-      { marks: [], disable: false },
-    ],
-    [
-      { marks: [2], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
+      { marks: [7], disable: false },
+      { marks: [1], disable: false },
+      { marks: [5], disable: false },
       { marks: [4], disable: true },
-      { marks: [], disable: false },
-      { marks: [1], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-    ],
-    [
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-    ],
-    [
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [1], disable: true },
-      { marks: [8], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [6], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-    ],
-    [
-      { marks: [], disable: false },
       { marks: [3], disable: true },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [], disable: false },
-      { marks: [8], disable: true },
-      { marks: [], disable: false },
-    ],
-    [
-      { marks: [], disable: true },
-      { marks: [], disable: true },
+      { marks: [9], disable: false },
       { marks: [6], disable: false },
-      { marks: [], disable: true },
-      { marks: [], disable: true },
-      { marks: [], disable: true },
-      { marks: [], disable: true },
-      { marks: [], disable: true },
-      { marks: [], disable: false },
+    ],
+    [
+      { marks: [9], disable: true },
+      { marks: [6], disable: false },
+      { marks: [5], disable: false },
+      { marks: [3], disable: false },
+      { marks: [2], disable: true },
+      { marks: [7], disable: false },
+      { marks: [1], disable: false },
+      { marks: [4], disable: false },
+      { marks: [8], disable: true },
+    ],
+    [
+      { marks: [3], disable: false },
+      { marks: [4], disable: false },
+      { marks: [1], disable: false },
+      { marks: [6], disable: false },
+      { marks: [8], disable: false },
+      { marks: [9], disable: false },
+      { marks: [7], disable: false },
+      { marks: [5], disable: false },
+      { marks: [2], disable: true },
+    ],
+    [
+      { marks: [5], disable: false },
+      { marks: [9], disable: true },
+      { marks: [3], disable: true },
+      { marks: [4], disable: true },
+      { marks: [6], disable: false },
+      { marks: [8], disable: true },
+      { marks: [2], disable: true },
+      { marks: [7], disable: true },
+      { marks: [1], disable: false },
+    ],
+    [
+      { marks: [4], disable: true },
+      { marks: [7], disable: false },
+      { marks: [2], disable: false },
+      { marks: [5], disable: false },
+      { marks: [1], disable: false },
+      { marks: [3], disable: false },
+      { marks: [6], disable: false },
+      { marks: [8], disable: false },
+      { marks: [9], disable: false },
+    ],
+    [
+      { marks: [6], disable: false },
+      { marks: [1], disable: true },
+      { marks: [8], disable: false },
+      { marks: [9], disable: true },
+      { marks: [7], disable: false },
+      { marks: [2], disable: true },
+      { marks: [4], disable: false },
+      { marks: [3], disable: false },
+      { marks: [5], disable: false },
+    ],
+    [
+      { marks: [7], disable: false },
+      { marks: [8], disable: true },
+      { marks: [6], disable: false },
+      { marks: [2], disable: true },
+      { marks: [3], disable: false },
+      { marks: [5], disable: true },
+      { marks: [9], disable: false },
+      { marks: [1], disable: false },
+      { marks: [4], disable: false },
+    ],
+    [
+      { marks: [1], disable: true },
+      { marks: [5], disable: false },
+      { marks: [4], disable: false },
+      { marks: [7], disable: false },
+      { marks: [9], disable: true },
+      { marks: [6], disable: false },
+      { marks: [8], disable: false },
+      { marks: [2], disable: false },
+      { marks: [3], disable: true },
+    ],
+    [
+      { marks: [2], disable: false },
+      { marks: [3], disable: false },
+      { marks: [9], disable: true },
+      { marks: [8], disable: true },
+      { marks: [4], disable: false },
+      { marks: [1], disable: false },
+      { marks: [5], disable: false },
+      { marks: [6], disable: true },
+      { marks: [7], disable: false },
     ],
   ];
+
+
+  document
+    .querySelectorAll(".win")
+    .forEach((cell) => cell.classList.remove("win"));
+  document.getElementById("onscreen-check").innerHTML = "check";
+
   setGame(game);
   state = "playing";
   allowInput = true;
