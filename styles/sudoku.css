@@ -1,41 +1,60 @@
 :root {
-  --text: black;
-  --background: white;
-  --outline: black;
   --outline-width: 1px;
   --outline-width-bold: 3px;
   --gap: 10px;
-  --header-height: 52px;
+  --header-height: 120px;
 
-  /* cell colors */
-  --focus: #eeeeee;
+  --interface-font: "monospace", serif;
+  --mark-font: "monospace", serif;
+
+  /* colors */
+  --text: black;
+  --background: white;
+  --outline: black;
   --highlight: #f2e3b6;
+  --disabled: #dddddd;
   --error: #f76c5e;
+  --disabled-highlight: #e8dac4;
+  --error-highlight: rgb(244, 141, 115);
+  --disabled-error: #ec8a83;
+  --disabled-error-highlight: #f2a47d;
   --win: #a3e2a3;
-}
 
-body {
-  margin: 0;
-
+  font-family: var(--interface-font) !important;
   color: var(--text) !important;
   background: var(--background);
 }
 
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
+button,
+select,
+input {
+  font-family: var(--interface-font) !important;
+  font-size: inherit;
+}
 
+header {
+  grid-area: header;
+}
+
+#game-selector {
+  aspect-ratio: 12;
+}
+
+#game-selector > select {
+  width: 100%;
+  height: 100%;
+
+  border: var(--outline-width-bold) solid var(--outline);
   background: var(--background);
 }
 
-main#sudoku {
+body#sudoku {
   display: grid;
   grid-template-areas:
+    "header header"
     "board settings"
     "onscreen spacer";
   grid-template-columns: 75fr 25fr;
-
   margin: auto;
 
   min-width: 360px;
@@ -43,20 +62,6 @@ main#sudoku {
 
   padding: var(--gap);
   gap: var(--gap);
-}
-
-@media (max-width: 768px) {
-  main#sudoku {
-    grid-template-areas:
-      "board"
-      "onscreen"
-      "settings";
-    grid-template-columns: 1fr;
-  }
-
-  #settings {
-    aspect-ratio: 1 !important;
-  }
 }
 
 /* Settings */
@@ -84,6 +89,21 @@ main#sudoku {
   background: var(--background);
 }
 
+@media (max-width: 768px) {
+  body#sudoku {
+    grid-template-areas:
+      "header"
+      "board"
+      "onscreen"
+      "settings";
+    grid-template-columns: 1fr;
+  }
+
+  #settings {
+    aspect-ratio: 1;
+  }
+}
+
 /* Onscreen keyboard */
 #onscreen-keyboard {
   grid-area: onscreen;
@@ -91,7 +111,6 @@ main#sudoku {
   display: grid;
   grid-template-columns: repeat(9, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  overflow: hidden;
 
   aspect-ratio: 9 / 2;
 
@@ -107,6 +126,10 @@ main#sudoku {
 
   background: var(--background);
   border: none;
+
+  &:hover {
+    background: var(--highlight);
+  }
 }
 
 /* Sudoku Board */
@@ -121,6 +144,10 @@ main#sudoku {
   background: var(--outline);
   gap: var(--outline-width);
   padding: var(--outline-width-bold);
+
+  &.error {
+    background: var(--error);
+  }
 }
 
 /* Bold Borders */
@@ -146,54 +173,57 @@ main#sudoku {
   position: relative;
   overflow: hidden;
 
-  font-family: "Crimson Text", serif;
-  font-size: min(4vw, 3vh, 32px);
+  font-family: monospace, serif;
+  font-size: min(3vw, 2vh, 32px);
   text-align: center;
   line-height: 0.75em;
 
   background: var(--background);
 
-  &:has([readonly]) {
-    background: #dddddd;
+  &:focus-within {
+    z-index: 1;
+    outline: 3px solid var(--outline);
+    animation: blink 1s steps(2, start) infinite;
   }
 
+  &:has([readonly]) {
+    background: var(--disabled);
+  }
+
+  &.highlight,
   &:hover {
     background: var(--highlight);
   }
 
-  &:focus-within:not(:has([readonly])) {
-    background: var(--focus);
+  &.error {
+    background: var(--error) !important;
   }
 
-  &:focus-within {
-    outline: 3px solid var(--outline);
-    z-index: 1;
-    animation: blink 1s steps(2, start) infinite;
+  &.highlight:has([readonly]) {
+    background: var(--disabled-highlight);
+  }
+
+  &.error.highlight {
+    background: var(--error-highlight) !important;
+  }
+
+  &.error:has([readonly]) {
+    background: var(--disabled-error) !important;
+  }
+
+  &.highlight.error:has([readonly]) {
+    background: var(--disabled-error-highlight) !important;
   }
 }
+
 @keyframes blink {
   to {
     outline: 3px solid transparent;
   }
 }
-.error {
-  background: var(--error) !important;
-}
 
 .win {
   background: var(--win) !important;
-}
-
-.highlight {
-  background: #f2e3b6;
-}
-
-.highlight:has([readonly]) {
-  background: #ccc09b;
-}
-
-.sudoku-row > .highlight:focus-within {
-  background: #dad1b7;
 }
 
 .sudoku-cell > input {
@@ -206,7 +236,6 @@ main#sudoku {
   caret-color: transparent;
   background: transparent;
   border: none;
-  resize: none;
   padding: 0;
   margin: 0;
 }
@@ -215,6 +244,7 @@ main#sudoku {
   width: 30%;
 }
 
+/* Order marks numerically */
 .mark-1 {
   order: 1;
 }
@@ -249,30 +279,4 @@ main#sudoku {
 
 .mark-9 {
   order: 9;
-}
-
-/* High scores */
-main#highscores {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 20px;
-}
-
-#highscores-board {
-  border-collapse: collapse;
-}
-
-th {
-  border-bottom: 1px solid black;
-}
-
-td,
-th {
-  padding: 15px !important;
-  text-align: center !important;
-}
-
-td {
-  color: #333333 !important;
 }
