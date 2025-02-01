@@ -33,14 +33,10 @@
     --highlight: #5985b9;
     --disabled: #252525;
     --error: #d1453b;
-    --disabled-highlight: hsl(
-      213,
-      37.3%,
-      42.5%
-    ); 
-    --error-highlight: hsl(6, 59.1%, 64.1%); 
-    --disabled-error: hsl(5, 36.9%, 28.4%); 
-    --disabled-error-highlight: hsl(5, 36.9%, 48.4%);red */
+    --disabled-highlight: #446895; 
+    --error-highlight: #da786d; 
+    --disabled-error: #63322e; 
+    --disabled-error-highlight: #a9554e;red */
     --win: #2d5f2d; 
   }
 }
